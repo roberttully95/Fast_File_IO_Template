@@ -9,6 +9,6 @@ Aims to improve the read/write time for large binary files. Does this by using a
 3. Currently only set to work with 2-byte datatypes. Several small things can be changed to modify this.
 
 ### Comments
-Uses when dealing with modifying / updating large datasets regularly. Reading single data elements at a time is not efficient. Example: For a 4 GB files of short ints, reading 1 MB at a time improves speed by a factor of ~ 10/15. Buffers greater than this do not provide further improvement. Changing method to C-based reading may improve again by a factor of ~ 2. 
+Useful when dealing with modifying / updating large datasets regularly. Reading single data elements at a time is not efficient. Example: For a 4 GB files of short ints, reading 1 MB at a time improves speed by a factor of ~ 10/15. Buffers greater than this do not provide further improvement. Changing method to C-based reading may improve again by a factor of ~ 2. 
 
 
