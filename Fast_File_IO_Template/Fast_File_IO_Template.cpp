@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -12,9 +16,17 @@ int main()
 {
 	auto start = std::chrono::high_resolution_clock::now();
 
+	FILE* CinFile = fopen("D:/Robert/Input_Data/Elevation/CONUS_ELEV_3_ARCSECONDS.bil", "r");;
+	FILE* CoutFile = fopen("D:/Robert/TEST/test_out.bil", "w+");
+	if (CinFile == NULL|| CoutFile == NULL)
+	{
+		std::cout << "Error opening files." << std::endl;
+		return -1;
+	}
+
 	// Set up File Streams
-	std::ifstream inFile("D:/Robert/Input_Data/Elevation/CONUS_ELEV_3_ARCSECONDS.bil", std::ios::in | std::ios::binary);
-	std::ofstream outFile("D:/Robert/TEST/test_out.bil", std::ios::out | std::ios::binary);
+	// std::ifstream inFile("D:/Robert/Input_Data/Elevation/CONUS_ELEV_3_ARCSECONDS.bil", std::ios::in | std::ios::binary);
+	// std::ofstream outFile("D:/Robert/TEST/test_out.bil", std::ios::out | std::ios::binary);
 
 	// Buffer and File Size
 	long long int file_bytes = ((long long int)NROWS) * ((long long int)NCOLS) * ((long long int)DATATYPE_SIZE); // bytes
@@ -33,21 +45,22 @@ int main()
 	long long int read_size = buffer_bytes;
 	for (int i = 0; i < num_iterations; i++) {
 
+
 		// On the last iteration, the read size changes to the 
 		// number of bytes remaining in the file.
 		if (i == num_iterations - 1)
 			read_size = remainder_bytes;
 
-		inFile.read(reinterpret_cast<char*>(buffer), (size_t)read_size);
+		fread(buffer, (size_t)DATATYPE_SIZE, (size_t)read_size/ (size_t)DATATYPE_SIZE, CinFile);
 		///////////////////////
 		// do something here //
 		///////////////////////
-		outFile.write(reinterpret_cast<char*>(buffer), (size_t)read_size);
+		fwrite(buffer, (size_t)DATATYPE_SIZE, (size_t)read_size / (size_t)DATATYPE_SIZE, CoutFile);
 	}
-
+	
 	// Close File Pointers
-	inFile.close();
-	outFile.close();
+	fclose(CinFile);
+	fclose(CoutFile);
 
 	// Benchmark
 	auto stop = std::chrono::high_resolution_clock::now();
