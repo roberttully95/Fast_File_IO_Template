@@ -5,7 +5,6 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <chrono> 
 
 #define NUM_FILE_DATA 2160000000
 #define DATATYPE_SIZE 2
@@ -13,8 +12,6 @@
 
 int main()
 {
-	auto start = std::chrono::high_resolution_clock::now();
-
 	FILE* CinFile = fopen("D:/Robert/Input_Data/Elevation/CONUS_ELEV_3_ARCSECONDS.bil", "rb");;
 	FILE* CoutFile = fopen("D:/Robert/TEST/test_out.bil", "w+b");
 
@@ -49,13 +46,8 @@ int main()
 		///////////////////////
 		fwrite(buffer, (size_t)DATATYPE_SIZE, (size_t)read_size / (size_t)DATATYPE_SIZE, CoutFile);
 	}
-	
+
 	// Close File Pointers
 	fclose(CinFile);
 	fclose(CoutFile);
-
-	// Benchmark
-	auto stop = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
-	std::cout << "Time Taken = " << duration.count() << " seconds." << std::endl;
 }
