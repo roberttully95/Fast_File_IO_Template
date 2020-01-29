@@ -3,20 +3,20 @@
 #endif
 
 #include <iostream>
-#include <sstream>
-#include <fstream>
 
 #define NUM_FILE_DATA 2160000000
 #define DATATYPE_SIZE 2
 #define BUFFER_SIZE_MB 1
+#define INPUT_FILE "<INPUT_FILE>"
+#define OUTPUT_FILE "<OUTPUT_FILE>"
 
 int main()
 {
-	FILE* CinFile = fopen("D:/Robert/Input_Data/Elevation/CONUS_ELEV_3_ARCSECONDS.bil", "rb");;
-	FILE* CoutFile = fopen("D:/Robert/TEST/test_out.bil", "w+b");
+	FILE* CinFile = fopen(INPUT_FILE, "rb");;
+	FILE* CoutFile = fopen(OUTPUT_FILE, "w+b");
 
 	if (CinFile == NULL || CoutFile == NULL)
-		return -1;
+		return -1; // opening & creating files unsuccessful
 
 	// Buffer and File Size
 	long long int file_bytes = (long long int)NUM_FILE_DATA * (long long int)DATATYPE_SIZE;
@@ -40,11 +40,18 @@ int main()
 		if (i == num_iterations - 1)
 			read_size = remainder_bytes;
 
-		fread(buffer, (size_t)DATATYPE_SIZE, (size_t)read_size / (size_t)DATATYPE_SIZE, CinFile);
+		long long int size_read = fread(buffer, (size_t)DATATYPE_SIZE, (size_t)read_size / (size_t)DATATYPE_SIZE, CinFile);
+		if (size_read != read_size / DATATYPE_SIZE)
+			return -2; // reading file unsuccessful
+
 		///////////////////////
 		// do something here //
 		///////////////////////
-		fwrite(buffer, (size_t)DATATYPE_SIZE, (size_t)read_size / (size_t)DATATYPE_SIZE, CoutFile);
+
+		size_t desired_write_size = (size_t)(read_size / DATATYPE_SIZE); // can change based on application
+		long long int size_written = fwrite(buffer, (size_t)DATATYPE_SIZE, desired_write_size, CoutFile);
+		if (size_written != desired_write_size)
+			return -3; // writing file unsuccessful
 	}
 
 	// Close File Pointers
