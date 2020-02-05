@@ -7,8 +7,8 @@
 #define NUM_FILE_DATA 2160000000
 #define DATATYPE_SIZE 2
 #define BUFFER_SIZE_MB 1
-#define INPUT_FILE "D:/Robert/Input_Data/Elevation/CONUS_ELEV_3_ARCSECONDS.bil"
-#define OUTPUT_FILE "D:/Robert/TEST/test_out.bil"
+#define INPUT_FILE "<INPUT_FILE>"
+#define OUTPUT_FILE "<OUTPUT_FILE>"
 
 int main()
 {
