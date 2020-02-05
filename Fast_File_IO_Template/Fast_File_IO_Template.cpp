@@ -7,12 +7,12 @@
 #define NUM_FILE_DATA 2160000000
 #define DATATYPE_SIZE 2
 #define BUFFER_SIZE_MB 1
-#define INPUT_FILE "<INPUT_FILE>"
-#define OUTPUT_FILE "<OUTPUT_FILE>"
+#define INPUT_FILE "D:/Robert/Input_Data/Elevation/CONUS_ELEV_3_ARCSECONDS.bil"
+#define OUTPUT_FILE "D:/Robert/TEST/test_out.bil"
 
 int main()
 {
-	FILE* CinFile = fopen(INPUT_FILE, "rb");;
+	FILE* CinFile = fopen(INPUT_FILE, "rb");
 	FILE* CoutFile = fopen(OUTPUT_FILE, "w+b");
 
 	if (CinFile == NULL || CoutFile == NULL)
@@ -28,22 +28,22 @@ int main()
 		remainder_bytes = buffer_bytes;
 
 	// Create Buffer
-	unsigned short* buffer = new unsigned short[buffer_bytes/DATATYPE_SIZE];
+	char* buffer = new char[buffer_bytes];
 
 	// Read all data and Write Data
-	int num_iterations = (int)ceil((double)file_bytes / (double)buffer_bytes);
+	int num_blocks = (int)ceil((double)file_bytes / (double)buffer_bytes);
 	long long int read_size = buffer_bytes;
 
-	for (int i = 0; i < num_iterations; i++) {
+	for (int i = 0; i < num_blocks; i++) {
 
 		// On last iteration, read_size changes to the bytes remaining in the file.
-		if (i == num_iterations - 1)
+		if (i == num_blocks - 1)
 			read_size = remainder_bytes;
 
 		long long int size_read = fread(buffer, (size_t)DATATYPE_SIZE, (size_t)read_size / (size_t)DATATYPE_SIZE, CinFile);
 		if (size_read != read_size / DATATYPE_SIZE)
 			return -2; // reading file unsuccessful
-
+		
 		///////////////////////
 		// do something here //
 		///////////////////////
